@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: election-app
+spec:
+  template:
+    spec:
+      containers:
+        - name: election-app
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 1024Mi
+            limits:
+              cpu: 2000m
+              memory: 2048Mi

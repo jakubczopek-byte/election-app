@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: election-postgres
+    environment:
+      POSTGRES_DB: election
+      POSTGRES_USER: election
+      POSTGRES_PASSWORD: election
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U election -d election"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - election-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: election-app
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/election
+      DB_USER: election
+      DB_PASS: election
+      SPRING_PROFILES_ACTIVE: default
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health/readiness"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
+    networks:
+      - election-network
+
+volumes:
+  postgres-data:
+
+networks:
+  election-network:
+    driver: bridge

@@ -1,0 +1,13 @@
+package pl.election.adapter.in.web;
+
+public enum ErrorCode {
+    VOTER_NOT_FOUND,
+    ELECTION_NOT_FOUND,
+    VOTING_OPTION_NOT_FOUND,
+    VOTER_BLOCKED,
+    DUPLICATE_VOTE,
+    DUPLICATE_EMAIL,
+    VALIDATION_ERROR,
+    RATE_LIMIT_EXCEEDED,
+    INTERNAL_ERROR
+}

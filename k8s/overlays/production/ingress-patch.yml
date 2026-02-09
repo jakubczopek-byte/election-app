@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: election-app
+spec:
+  tls:
+    - hosts:
+        - election-app.example.com
+      secretName: election-app-production-tls
+  rules:
+    - host: election-app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: election-app
+                port:
+                  number: 80

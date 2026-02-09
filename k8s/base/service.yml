@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: election-app
+  labels:
+    app: election-app
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: election-app
