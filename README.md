@@ -268,4 +268,3 @@ Remove volumes:
 ```bash
 docker compose down -v
 ```
-# -election-app

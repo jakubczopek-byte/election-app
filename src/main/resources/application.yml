@@ -1,0 +1,54 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  application:
+    name: election-app
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/election}
+    username: ${DB_USER:election}
+    password: ${DB_PASS:election}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=600s
+    cache-names: election-results
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+rate-limit:
+  capacity: 100
+  refill-tokens: 100
+  refill-duration: 60s

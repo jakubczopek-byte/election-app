@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: election-staging
+
+commonLabels:
+  environment: staging
+
+resources:
+  - ../../base
+
+replicas:
+  - name: election-app
+    count: 1
+
+images:
+  - name: ghcr.io/owner/election-app
+    newTag: latest
+
+configMapGenerator:
+  - name: election-app-config
+    behavior: merge
+    literals:
+      - SPRING_PROFILES_ACTIVE=staging
+
+patchesStrategicMerge:
+  - ingress-patch.yml
